@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="profile-container">
+    <h1 class="profile-title">My Profile</h1>
+    <div>
+      <img src="{{ user.avatar_url() }}" 
+           alt="Avatar" 
+           style="width:200px;height:200px;object-fit:cover;border-radius:50%;">
+    </div>
+    <p class="profile-username"><strong>Username:</strong> {{ user.username }}</p>
+    <p class="profile-change-avatar">
+      <a href="{{ url_for('edit_profile') }}" class="btn">Change Avatar</a>
+    </p>
+  </div>
+{% endblock %}

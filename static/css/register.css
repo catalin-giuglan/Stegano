@@ -1,0 +1,66 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-container {
+    background-color: #555;
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box; /* Ensures padding is included in the width calculation */
+}
+
+h1 {
+    color: #33FF83;
+    text-align: center;
+    font-size: 2rem;
+}
+
+label {
+    color: white;
+    font-size: 1.1rem;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #33FF83;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: #333;
+    color: white;
+    box-sizing: border-box; /* Ensure padding is included in the width calculation */
+}
+
+input[type="text"]:focus, input[type="password"]:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 0 5px #28a745;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #33FF83;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #28a745;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 5px #28a745;
+}

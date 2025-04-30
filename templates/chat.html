@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block page_css %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+  <div class="users-sidebar">
+    <div class="users-header">
+      <h2>Conversații</h2>
+    </div>
+    <ul class="users-list">
+      {% for user in users %}
+      <li>
+        <a href="{{ url_for('chat_with_user', user_id=user.id) }}"
+           class="{% if other_user and other_user.id == user.id %}active{% endif %}">
+          <img src="{{ user.avatar_url() }}"
+               alt="{{ user.username }}'s avatar">
+          <span class="username">{{ user.username }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="chat-area">
+    <div class="chat-header">
+      <h2>
+        {% if other_user %}
+          Conversație cu {{ other_user.username }}
+        {% else %}
+          Selectează un utilizator pentru a începe o conversație
+        {% endif %}
+      </h2>
+    </div>
+
+    <div class="messages-container">
+      {% if not other_user %}
+        <div style="display: block; text-align: left; padding: 25px;">
+          <h3 style="font-size: 25px; font-weight: bold; color: #333;">Bine ai venit în aplicația de chat steganografic!</h3>
+          <p style="font-size: 20px;">Selectează un utilizator din lista din stânga pentru a începe o conversație.</p>
+          <p style="font-size: 20px;">Poți trimite mesaje text normale sau poți ascunde mesaje secrete în imagini.</p>
+        </div>
+      {% else %}
+        {% for msg in messages %}
+          <div class="message {% if msg.sender_id == current_user.id %}sent{% else %}received{% endif %}">
+            {% if msg.content %}
+              <div class="message-content">{{ msg.content }}</div>
+            {% endif %}
+            {% if msg.image_path %}
+              <div class="message-image-container">
+                <img src="{{ url_for('static', filename=msg.image_path) }}"
+                     class="message-image"
+                     onclick="window.open(this.src)">
+                {% if msg.has_hidden_message %}
+                  <div class="stegano-indicator"><i class="fas fa-lock"></i>Secret</div>
+                {% endif %}
+              </div>
+            {% endif %}
+            <div class="message-time">{{ msg.timestamp.strftime('%H:%M') }}</div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {% if other_user %}
+    <form class="message-form" method="POST" enctype="multipart/form-data">
+      {{ csrf_token() }}
+      <input type="text" name="message" class="message-input" placeholder="Scrie mesajul...">
+      <div class="file-input-container">
+        <button type="button" class="file-button"><i class="fas fa-image"></i></button>
+        <input type="file" name="image" class="file-input" accept="image/*">
+      </div>
+      <button type="submit" class="send-button">Trimite</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+<script>
+  // Reîncarcă conversația automat
+  setInterval(function() {
+    if (window.location.href.includes('/chat/')) {
+      window.location.reload();
+    }
+  }, 50000);
+</script>

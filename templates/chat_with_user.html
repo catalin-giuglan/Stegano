@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+<meta http-equiv="refresh" content="10">
+
+
+{% block content %}
+<div class="chat-container">
+    <div class="users-sidebar">
+        <div class="users-header">
+            <h2>Conversații</h2>
+        </div>
+        <ul class="users-list">
+            {% for user in users %}
+              <li>
+                <a href="{{ url_for('chat_with_user', user_id=user.id) }}"
+                   class="{% if other_user and other_user.id == user.id %}active{% endif %}">
+                  <img src="{{ user.avatar_url() }}"
+                       alt="{{ user.username }}'s avatar">
+                  <span class="username">{{ user.username }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>           
+    </div>
+
+    <div class="chat-area">
+        <div class="chat-header">
+            <h2>Chat cu {{ other_user.username }}</h2>
+        </div>
+
+        <div class="messages-container" id="messages-container">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="message {% if message.sender_id == current_user.id %}sent{% else %}received{% endif %}">
+                    <div class="message-content">
+                        {% if message.content %}
+                        {{ message.content }}
+                        {% endif %}
+                    </div>
+
+                    {% if message.image_path %}
+                    <div class="message-image-container">
+                        <img src="{{ url_for('static', filename=message.image_path) }}" class="message-image" onclick="showFullImage(this.src)">
+                        <div class="image-actions-menu">
+                            <div class="menu-dots" onclick="toggleMenu(this)">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <div class="menu-options">
+                                {% if message.has_hidden_message or message.sender_id != current_user.id %}
+                                <button class="decode-btn" onclick="decodeImage('{{ message.image_path }}')">Decodează</button>
+                                {% endif %}
+                                <a class="download-btn" href="{{ url_for('static', filename=message.image_path) }}" download> Descarcă</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="message-time">{{ message.timestamp.strftime('%H:%M') }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="no-messages">
+                <p>Nu există mesaje. Începe o conversație!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <form class="message-form" method="POST" enctype="multipart/form-data">
+            <input type="text" name="message" class="message-input" placeholder="Scrie un mesaj...">
+
+            <div class="file-input-container">
+                <button type="button" class="file-button" id="upload-button">
+                    <i class="fas fa-image"></i>
+                    <span>Imagine</span>
+                </button>
+                <input type="file" name="image" id="image-upload" class="file-input" accept="image/*">
+            </div>
+
+            <button type="button" id="stegano-button" class="file-button">
+                <i class="fas fa-key"></i>
+                <span>Encode</span>
+            </button>
+
+            <button type="submit" class="send-button">Trimite</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal pentru mesaj ascuns -->
+<div class="hidden-message-modal" id="hidden-message-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Ascunde un mesaj în imagine</h3>
+            <button class="close-modal" id="close-modal">&times;</button>
+        </div>
+        <input type="text" id="hidden-message-input" name="hidden_message" class="hidden-message-input" placeholder="Mesajul secret...">
+        <div class="modal-buttons">
+            <button class="cancel-button" id="cancel-hidden-message">Anulează</button>
+            <button class="hide-message-button" id="confirm-hidden-message">Ascunde mesajul</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleMenu(element) {
+        const menu = element.closest('.image-actions-menu').querySelector('.menu-options');
+        menu.classList.toggle('show');
+    }
+
+    window.decodeImage = function(imagePath) {
+        fetch('{{ url_for("decode_image") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'image_path=' + encodeURIComponent(imagePath)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Eroare: ' + data.error);
+            } else {
+                alert('Mesaj ascuns: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('A apărut o eroare la decodarea imaginii.');
+        });
+    };
+
+    function showFullImage(src) {
+        window.open(src, '_blank');
+    }
+
+    const uploadButton = document.getElementById('upload-button');
+    const imageInput = document.getElementById('image-upload');
+    const steganoButton = document.getElementById('stegano-button');
+    const modal = document.getElementById('hidden-message-modal');
+    const closeModal = document.getElementById('close-modal');
+    const cancelHiddenMessage = document.getElementById('cancel-hidden-message');
+    const confirmHiddenMessage = document.getElementById('confirm-hidden-message');
+
+    uploadButton.addEventListener('click', () => imageInput.click());
+
+    steganoButton.addEventListener('click', () => {
+        if (imageInput.files.length > 0) {
+            modal.style.display = 'block';
+        } else {
+            alert('Selectează o imagine înainte să ascunzi un mesaj.');
+        }
+    });
+
+    closeModal.addEventListener('click', () => modal.style.display = 'none');
+    cancelHiddenMessage.addEventListener('click', () => modal.style.display = 'none');
+    confirmHiddenMessage.addEventListener('click', () => {
+        const hiddenMessage = document.getElementById('hidden-message-input').value;
+        if (hiddenMessage.trim()) {
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = 'hidden_message';
+            hiddenField.value = hiddenMessage;
+            document.querySelector('.message-form').appendChild(hiddenField);
+            modal.style.display = 'none';
+        } else {
+            alert('Introdu un mesaj secret!');
+        }
+    });
+</script>
+
+<script>
+    // la fiecare 5 secunde, reîncarcă pagina curentă
+    setInterval(function() {
+      window.location.reload();
+    }, 30000);
+  </script>
+
+<script>
+    // La fiecare load, scroll automat la ultimul mesaj
+    document.addEventListener('DOMContentLoaded', () => {
+      const last = document.querySelector('.messages-container .message:last-child');
+      if (last) last.scrollIntoView({ behavior: 'auto', block: 'end' });
+    });
+  
+    // Reload la fiecare 5s
+    setInterval(() => window.location.reload(), 50000);
+  </script>
+  
+{% endblock %}

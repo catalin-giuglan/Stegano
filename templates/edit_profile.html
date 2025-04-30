@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="edit-profile-container">
+    <h1 class="profile-title">Change Avatar</h1>
+    <form method="POST" enctype="multipart/form-data">
+      <div class="profile-upload-button" style="margin-bottom: 10px; text-align: center;">
+        <label for="avatar">Upload new avatar:</label>
+        <!-- <div style="display: inline-block; background-color: #333; padding: 10px 20px; border-radius: 10px;"> -->
+          <input 
+            type="file" 
+            name="avatar" 
+            id="avatar" 
+            accept="image/*" 
+            required 
+            onchange="document.getElementById('preview-image').src = window.URL.createObjectURL(this.files[0])"
+            style="color: white;"
+          >
+        <!-- </div> -->
+      </div>
+      
+
+      <!-- Preview Image -->
+      <div style="margin: 20px 0;">
+        <img id="preview-image" 
+             src="" 
+             style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; display: none; margin-left: auto; margin-right: auto;"
+             onload="this.style.display='block';">
+      </div>
+      <button type="submit" class="profile-save-button">Save</button>
+      <button type="button" class="profile-cancel-button" onclick="window.location.href='{{ url_for('profile') }}';">Cancel</button>
+    </form>
+  </div>
+{% endblock %}

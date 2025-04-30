@@ -1,29 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-
-</style>
-<style type="text/css">
-.form-style-6{font: 125% Arial, Helvetica, sans-serif;max-width: 400px;margin: 10px auto;padding: 16px;background: #555;}
-.form-style-6 h1{background: #33FF83;padding: 20px 0;font-size: 140%;font-weight: 300;text-align: center;color: #fff;margin: -16px -16px 16px -16px;}
-.form-style-6 input[type="file"],
-.form-style-6 input[type="file"]:focus,
-.form-style-6 input[type="submit"],
-.form-style-6 input[type="button"]{box-sizing: border-box;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;width: 100%;padding: 3%;background: #33FF83;border-bottom: 2px solid #33FF83;border-top-style: none;border-right-style: none;border-left-style: none;color: #fff;}
-.form-style-6 input[type="submit"]:hover,
-.form-style-6 input[type="button"]:hover{background: #33FF83;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decode Image - SteganoChat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body bgcolor="#555">
-    <a href="/">Home</a>
-<div class="form-style-6">
-<h1>Decode</h1>
-<form method="POST" enctype="multipart/form-data">
-<input type="file" name="pic" id="pic" placeholder="Imagine" />
-<input type="submit" value="Send" />
-</form>
-</div>
-
+<body>
+    <div class="container">
+        <header>
+            <h1>SteganoChat</h1>
+            <p>Decode a message from an image</p>
+            <nav>
+                <a href="{{ url_for('chat') }}">Back to Chat</a>
+            </nav>
+        </header>
+        
+        <div class="tool-container">
+            <h2>Decode Message from Image</h2>
+            
+            <form action="{{ url_for('img_decode') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="pic">Select Image with Hidden Message:</label>
+                    <input type="file" id="pic" name="pic" accept="image/*" required>
+                    <div class="image-preview" id="image-preview"></div>
+                </div>
+                
+                <button type="submit" class="btn primary">Decode Message</button>
+            </form>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 SteganoChat. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Image preview
+        const imageInput = document.getElementById('pic');
+        const imagePreview = document.getElementById('image-preview');
+        
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                }
+                
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    </script>
 </body>
 </html>

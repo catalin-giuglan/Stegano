@@ -1,38 +1,27 @@
-<!DOCTYPE html>
-  <html>
-  <head>
-    <style>
-    ul {
-      list-style-type: none;
-      margin: 0;
-      margin-top: 5%;
-      padding: 0;
-      width: 100%;
-      background-color: #33FF83;
-    }
-    
-    li a {
-      display: block;
-      color: #000;
-      padding: 80px 16px;
-      text-align: center;
-      font-size: 150%;
-      text-decoration: none;
-    }
-    
-    /* Change the link color on hover */
-    li a:hover {
-      background-color: #555;
-      color: white;
-    }
-    </style>
-    </head>
-  <body bgcolor="#33FF83">
-    <ul>
-      <li><a href="/image/encode">Encode</a></li>
-        <li><a href="/image/last/encoded">Last Encoded</a></li>
-        <li><a href="/image/decode">Decode</a></li>
-        <li><a href="/image/last/decoded">Last Decoded</a></li>
-      </ul>
-  </body>
-  </html>
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Welcome to SteganoApp</h1>
+            <p>Encrypt and decode your messages within images securely and easily.</p>
+            <p>Chat with your friends without worrying about privacy!</p>
+            <a href="/image/encode" class="btn">Start Encoding</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="feature-card">
+            <h2>Encode Messages</h2>
+            <p>Hide your messages in images and share them securely.</p>
+            <!-- <a href="/image/encode" class="btn">Encode</a> -->
+        </div>
+        <div class="feature-card">
+            <h2>Decode Messages</h2>
+            <p>Retrieve hidden messages from images easily.</p>
+            <!-- <a href="/image/decode" class="btn">Decode</a> -->
+        </div>
+    </section>
+{% endblock %}
