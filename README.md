@@ -1,6 +1,6 @@
 # 🛡️ Stegano Chat
 
-**Stegano Chat** is a simple yet powerful chat application that allows users to send encrypted messages using the concept of **Steganography**—the practice of concealing information within another message or object to avoid detection.
+**Stegano Chat** is a simple yet powerful chat application that allows users to send encrypted messages using the concept of **Steganography**, the practice of concealing information within another message or object to avoid detection.
 
 ---
 
