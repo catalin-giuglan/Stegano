@@ -4,9 +4,6 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/chat.css') }}">
 {% endblock %}
 
-<meta http-equiv="refresh" content="10">
-
-
 {% block content %}
 <div class="chat-container">
     <div class="users-sidebar">
@@ -90,7 +87,6 @@
     </div>
 </div>
 
-<!-- Modal pentru mesaj ascuns -->
 <div class="hidden-message-modal" id="hidden-message-modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -147,7 +143,7 @@
 
     steganoButton.addEventListener('click', () => {
         if (imageInput.files.length > 0) {
-            modal.style.display = 'block';
+            modal.style.display = 'flex';
         } else {
             alert('Selectează o imagine înainte să ascunzi un mesaj.');
         }
@@ -171,21 +167,15 @@
 </script>
 
 <script>
-    // la fiecare 5 secunde, reîncarcă pagina curentă
-    setInterval(function() {
-      window.location.reload();
-    }, 30000);
-  </script>
+    window.onload = () => {
+        const messagesContainer = document.getElementById('messages-container');
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    };
 
-<script>
-    // La fiecare load, scroll automat la ultimul mesaj
-    document.addEventListener('DOMContentLoaded', () => {
-      const last = document.querySelector('.messages-container .message:last-child');
-      if (last) last.scrollIntoView({ behavior: 'auto', block: 'end' });
-    });
-  
-    // Reload la fiecare 5s
     setInterval(() => window.location.reload(), 50000);
-  </script>
+</script>
+
   
 {% endblock %}

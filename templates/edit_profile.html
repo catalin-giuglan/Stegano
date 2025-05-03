@@ -5,21 +5,10 @@
     <form method="POST" enctype="multipart/form-data">
       <div class="profile-upload-button" style="margin-bottom: 10px; text-align: center;">
         <label for="avatar">Upload new avatar:</label>
-        <!-- <div style="display: inline-block; background-color: #333; padding: 10px 20px; border-radius: 10px;"> -->
-          <input 
-            type="file" 
-            name="avatar" 
-            id="avatar" 
-            accept="image/*" 
-            required 
-            onchange="document.getElementById('preview-image').src = window.URL.createObjectURL(this.files[0])"
-            style="color: white;"
-          >
-        <!-- </div> -->
+          <input type="file" name="avatar" id="avatar" accept="image/*" required 
+            onchange="document.getElementById('preview-image').src = window.URL.createObjectURL(this.files[0])" style="color: white;">
       </div>
-      
 
-      <!-- Preview Image -->
       <div style="margin: 20px 0;">
         <img id="preview-image" 
              src="" 

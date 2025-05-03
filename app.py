@@ -13,7 +13,7 @@ app.config['SECRET_KEY'] = 'your-secret-key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///chat.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max upload
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 # Ensure upload directories exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -112,20 +112,20 @@ def login():
     
     return render_template('login.html')
 
-@app.route('/logout')
 @login_required
+@app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/chat')
 @login_required
+@app.route('/chat')
 def chat():
     users = User.query.filter(User.id != current_user.id).all()
     return render_template('chat.html', users=users)
 
-@app.route('/chat/<int:user_id>', methods=['GET', 'POST'])
 @login_required
+@app.route('/chat/<int:user_id>', methods=['GET', 'POST'])
 def chat_with_user(user_id):
     other_user = User.query.get_or_404(user_id)
     
@@ -224,8 +224,8 @@ def decode_image():
         return jsonify({'error': str(e)}), 500
 
 # Original steganography routes (kept for compatibility)
-@app.route('/image/encode', methods=["GET", "POST"])
 @login_required
+@app.route('/image/encode', methods=["GET", "POST"])
 def img_encode():
     # Get all users for the dropdown
     users = User.query.filter(User.id != current_user.id).all()
@@ -266,8 +266,8 @@ def img_encode():
         
     return render_template("img_enc.html", users=users)
 
-@app.route('/image/decode', methods=["GET", "POST"])
 @login_required
+@app.route('/image/decode', methods=["GET", "POST"])
 def img_decode():
     if request.method == "POST":
         file = request.files["pic"]
@@ -283,13 +283,13 @@ def img_decode():
             return render_template("success.html", message=f"Error: {str(e)}")
     return render_template("img_dec.html")
 
-@app.route('/profile')
 @login_required
+@app.route('/profile')
 def profile():
     return render_template("profile.html", user=current_user)
 
-@app.route('/profile/edit', methods=['GET', 'POST'])
 @login_required
+@app.route('/profile/edit', methods=['GET', 'POST'])
 def edit_profile():
     if request.method == 'POST':
         # Handle avatar upload
