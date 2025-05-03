@@ -40,7 +40,7 @@ class User(UserMixin, db.Model):
         """
         if self.avatar:
             return url_for('static', filename=f'uploads/{self.avatar}')
-        return url_for('static', filename='uploads/default_avatar.png')
+        return url_for('static', filename='default_avatar.png')
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
